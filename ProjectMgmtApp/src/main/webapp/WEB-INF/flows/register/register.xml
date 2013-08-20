@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns="http://www.springframework.org/schema/webflow"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+    
+   <var name="user" class="com.me.pojo.User"/>
+   <var name="company" class="com.me.pojo.Company"/>
+   <var name="address" class="com.me.pojo.Address"/>
+   <var name="paymentInfo" class="com.me.pojo.PaymentInfo"/>
+
+    <!-- By default, the first state is the start state. -->
+    <!-- User information -->
+    <view-state id="step1"  view="/WEB-INF/flows/register/step1.jsp"  model="user" >
+  
+     <binder>
+    	<binding property="firstName" required="true"/>
+    	<binding property="lastName" required="true"/>
+    	<binding property="email" required="true"/>
+    	<binding property="dob" required="true"/>
+    	<binding property="password" required="true"/>
+    	<binding property="jobTitle" required="true"/>
+    	<binding property="role" required="true"/>
+    	<binding property="phone" required="true"/>
+    	<binding property="company" required="true"/>
+    	
+    </binder>
+     
+    <transition on="next" to="step2">
+    <!-- before going to step 2 set user in flow scope -->
+    	<set name="flowScope.user" value="user" ></set>
+    	
+    </transition>
+    
+    <transition on="cancel" to="cancel" />
+            
+    </view-state>
+    
+    
+    <view-state id="step2"  view="/WEB-INF/flows/register/step2.jsp" model="address" >
+    
+        <binder>
+            <binding property="streetName" required="true"/>
+            <binding property="city" required="true"/>
+            <binding property="state" required="true"/>
+            <binding property="country" required="true"/>
+            <binding property="zipCode" required="true"/>
+        </binder>
+        <transition on="finish" to="step3">
+        	<set name="flowScope.companyName" type="string" value="requestParameters.companyName"></set>
+        	<set name="flowScope.numOfEmployees" type="string" value="requestParameters.numOfEmployees"></set>
+        	<evaluate expression="registerWebFlow.step2(address, companyName, numOfEmployees, user)" result="flowScope.company"></evaluate>
+        	
+        </transition>
+    
+		<transition on="previous" to="step1"/>
+		<transition on="cancel" to="cancel"/>
+		
+	</view-state>
+	
+	<view-state id="step3" view="/WEB-INF/flows/register/step3.jsp" model="paymentInfo">
+	<binder>
+		<binding property="creditCardNumber" required="true"/>
+		<binding property="cvcNumber" required="true"/>
+		<binding property="expirationDate" required="true"/>
+		<binding property="cardType" required="true"/>
+	</binder>
+		<transition on="next" to="success">
+			<evaluate expression="registerWebFlow.step3(address, company, user, paymentInfo)" result="flowScope.value"></evaluate>
+			<render fragments="success"></render>
+        </transition>
+		
+		<transition on="previous" to="step2"/>
+		<transition on="cancel" to="cancel"></transition>
+	</view-state>
+
+	<end-state id="success" view="/WEB-INF/flows/register/success.jsp"/>
+
+	<end-state id="cancel"  view="/WEB-INF/flows/register/cancel.jsp"/>
+</flow>

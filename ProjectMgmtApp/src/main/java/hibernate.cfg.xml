@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory name="SessionFactory">
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.password">12345</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hibernate</property>
+        <property name="hibernate.connection.username">root</property>
+        
+        <property name="connection.pool_size">1</property>
+        <!--  <property name="current_session_context_class">thread</property>-->
+         <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property> 
+        <property name="show_sql">true</property>
+        <property name="hbm2ddl.auto">validate</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+       
+        <mapping class="com.me.pojo.User"/>
+        <mapping class="com.me.pojo.Company"/>
+        <mapping class="com.me.pojo.Address"/>
+        <mapping class="com.me.pojo.PaymentInfo"/>
+        <mapping class="com.me.pojo.Staff"/>
+        <mapping class="com.me.pojo.Team"/>
+        <mapping class="com.me.pojo.Project"/>
+        <mapping class="com.me.pojo.Task"/>
+        <mapping class="com.me.pojo.WorkQueue"/>
+        <mapping class="com.me.pojo.Issue"/>
+   		 
+   
+   
+    </session-factory>
+</hibernate-configuration>
